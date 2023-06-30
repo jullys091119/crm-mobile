@@ -6,13 +6,25 @@ export const Context = createContext(null);
 
 export const ContextProvider = ({ children }) => {
 
-  const [valueEmail, setValueEmail] = useState('saravic');
-  const [valuePassword, setValuePassword] = useState('root');
+  const [valueEmail, setValueEmail] = useState('julian');
+  const [valuePassword, setValuePassword] = useState('julian');
   const [token, setToken] = useState("")
   const [sid, setSid] = useState("")
   const [uid, setUid] = useState("")
   const [cookie, setCookie] = useState("")
-   console.log(sid, "sid")
+  const [currentToken, setCurrentToken] = useState("")
+
+
+  const getCurrentToken = async () => {
+    axios.post("http://50.116.19.48:8888/api/user/token", {
+      headers: {
+        'Content-Type': 'application/json',
+        "X-CSRF-Token": token,
+      }
+    }).then(res=>setCurrentToken(res.data.token)).catch((error)=>console.log(error))
+  }
+   
+
   getCredentials = async () => {
     try {
       let tk = await AsyncStorage.getItem('@token');
@@ -28,6 +40,7 @@ export const ContextProvider = ({ children }) => {
       console.log("No se pudo guardar la credencial en la store")
     }
   }
+
 
   setCredentials = async (data) => {
     try {
@@ -49,7 +62,7 @@ export const ContextProvider = ({ children }) => {
     },{
       headers: {
         'Content-Type': 'application/json',
-        "X-CSRF-Token": token,
+        "X-CSRF-Token": currentToken,
       },
       withCredentials: true
     })
@@ -73,9 +86,8 @@ export const ContextProvider = ({ children }) => {
   }
 
   const logout = () => {
-    console.log(token, "token")
-    console.log(sid,"sidd")
-    console.log(uid, "uid")
+    console.log(uid)
+    console.log(sid)
     axios.post(API_URL + 'custom/logout',{
       "uid": parseInt(uid),
       "sid": sid,
@@ -104,7 +116,7 @@ export const ContextProvider = ({ children }) => {
 
   useEffect(()=>{
     getCredentials()
-   
+    getCurrentToken()
   },[])
 
   return (
