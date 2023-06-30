@@ -2,6 +2,7 @@ import { React, useState, useEffect, useContext} from 'react';
 import { StyleSheet, View, Image, TouchableWithoutFeedback } from 'react-native';
 import { Layout, Input, Button, Icon, Text } from '@ui-kitten/components';
 import { Context } from '../appcontext/AppContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Login({navigation}) {
 
   const {login, valueEmail, valuePassword, logout} = useContext(Context)
@@ -9,13 +10,15 @@ export default function Login({navigation}) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const loginBtn = () => {
-    login()
+  const loginBtn = async () => {
+   let status = await login()
+    if (status == 200) {
+      navigation.push("Dashboard")
+    }
   }
 
   const logoutBtn = () => {
     logout()
-  
   }
 
   const AlertIcon = (props) => (

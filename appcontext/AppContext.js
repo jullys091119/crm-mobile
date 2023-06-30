@@ -6,13 +6,14 @@ export const Context = createContext(null);
 
 export const ContextProvider = ({ children }) => {
 
-  const [valueEmail, setValueEmail] = useState('julian');
-  const [valuePassword, setValuePassword] = useState('julian');
+  const [valueEmail, setValueEmail] = useState('saravic');
+  const [valuePassword, setValuePassword] = useState('root');
   const [token, setToken] = useState("")
   const [sid, setSid] = useState("")
   const [uid, setUid] = useState("")
   const [cookie, setCookie] = useState("")
   const [currentToken, setCurrentToken] = useState("")
+  const [status, setStatus] =  useState("")
 
 
   const getCurrentToken = async () => {
@@ -25,7 +26,7 @@ export const ContextProvider = ({ children }) => {
   }
    
 
-  getCredentials = async () => {
+  const  getCredentials = async () => {
     try {
       let tk = await AsyncStorage.getItem('@token');
       setToken(tk)
@@ -42,12 +43,20 @@ export const ContextProvider = ({ children }) => {
   }
 
 
-  setCredentials = async (data) => {
+  const removeCredentials = async () => {
+    await AsyncStorage.removeItem('@token');
+    await AsyncStorage.removeItem('@uid');
+    await AsyncStorage.removeItem('@sid');
+    await AsyncStorage.removeItem('@cookie');
+  }
+
+
+  setCredentials = async (data, status) => {
     try {
       await AsyncStorage.setItem('@token',data.token);
       await AsyncStorage.setItem('@sid', data.sessid);
       await AsyncStorage.setItem('@uid',  data.user.uid);
-      await AsyncStorage.setItem('@cookie', data.session_name + '=' + data.sessid);
+      await AsyncStorage.setItem('@cookie', data.session_name + '=' + data.sessid)
       console.log("Se guardaron las credenciales exitosamente")
     } catch(e) {
       console.log("No se pudo guardar la credencial en la store")
@@ -56,13 +65,13 @@ export const ContextProvider = ({ children }) => {
   
   //login user
   const login = async  () => {
-    axios.post(API_URL + 'user/login', {
+    return axios.post(API_URL + 'user/login', {
       "username": valueEmail,
       "password": valuePassword
     },{
       headers: {
         'Content-Type': 'application/json',
-        "X-CSRF-Token": currentToken,
+        "X-CSRF-Token": token,
       },
       withCredentials: true
     })
@@ -70,6 +79,7 @@ export const ContextProvider = ({ children }) => {
       alert("usuario logueado")
       console.log(res.data)
       setCredentials(res.data)
+      return res.status
     })
     .catch(error => {
       if (error.response) {
@@ -84,10 +94,9 @@ export const ContextProvider = ({ children }) => {
       console.log(error.config);
     });
   }
+  
 
   const logout = () => {
-    console.log(uid)
-    console.log(sid)
     axios.post(API_URL + 'custom/logout',{
       "uid": parseInt(uid),
       "sid": sid,
@@ -100,6 +109,7 @@ export const ContextProvider = ({ children }) => {
       withCredentials: true
     }).then(response=> {
       console.log(response, "respuestas <<<<")
+      removeCredentials()
     }).catch(error=>{
       if (error.response) {
         console.log(error.response.data);
@@ -116,7 +126,7 @@ export const ContextProvider = ({ children }) => {
 
   useEffect(()=>{
     getCredentials()
-    getCurrentToken()
+    //getCurrentToken()
   },[])
 
   return (
@@ -125,7 +135,7 @@ export const ContextProvider = ({ children }) => {
       login,
       logout,
       valuePassword,
-      valueEmail
+      valueEmail,
     }}>
     {children}
     </Context.Provider>
