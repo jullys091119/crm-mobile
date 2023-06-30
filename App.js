@@ -5,10 +5,13 @@ import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/comp
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ContextProvider, Context } from './appcontext/AppContext';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 
 //componentes
 import Login from './components/Login';
-import { NavigationContainer } from '@react-navigation/native';
+import { Dashboard } from './components/Dashboard';
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +23,7 @@ export default function App() {
         <ApplicationProvider {...eva} theme={eva.light}>
           <NavigationContainer>
             <Stack.Navigator>
-              <Stack.Screen 
+              {/* <Stack.Screen 
                name="Login"
                component={Login}
                 options={{
@@ -30,6 +33,17 @@ export default function App() {
                     backgroundColor: "white",
                   },
                 }}
+              /> */}
+              <Stack.Screen 
+                name="Dashboard"
+                component={Dashboard}
+                options={{
+                  headerShown: false,
+                  title: "",
+                  headerStyle: {
+                    backgroundColor: "white",
+                  },
+              }}
               />
             </Stack.Navigator>
           </NavigationContainer>
