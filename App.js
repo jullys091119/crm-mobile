@@ -23,7 +23,7 @@ export default function App() {
         <ApplicationProvider {...eva} theme={eva.light}>
           <NavigationContainer>
             <Stack.Navigator>
-              {/* <Stack.Screen 
+              <Stack.Screen 
                name="Login"
                component={Login}
                 options={{
@@ -33,7 +33,7 @@ export default function App() {
                     backgroundColor: "white",
                   },
                 }}
-              /> */}
+              />
               <Stack.Screen 
                 name="Dashboard"
                 component={Dashboard}
