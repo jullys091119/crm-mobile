@@ -3,22 +3,40 @@ import { StyleSheet, View } from 'react-native';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import Login from './components/Login';
 import { ContextProvider, Context } from './appcontext/AppContext';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+//componentes
+import Login from './components/Login';
+import { NavigationContainer } from '@react-navigation/native';
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+export default function App() {  
   return (
     <>
       <ContextProvider>
+        <IconRegistry icons={EvaIconsPack} />
         <ApplicationProvider {...eva} theme={eva.light}>
-          <IconRegistry icons={EvaIconsPack} />
-          <Login/>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen 
+               name="Login"
+               component={Login}
+                options={{
+                  headerShown: false,
+                  title: "",
+                  headerStyle: {
+                    backgroundColor: "white",
+                  },
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
         </ApplicationProvider>
         <StatusBar style="auto" />
       </ContextProvider>
     </>
-   
   );
 }
 
