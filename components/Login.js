@@ -23,7 +23,6 @@ export default function Login() {
   const sesionOut =async () => {
     let status = await logout()
     if (status == 200) {
-      alert("logout")
       navigation.navigate("Login")
     }
   }
@@ -88,13 +87,6 @@ export default function Login() {
             >
             Enviar
           </Button>
-          <Button 
-            style={styles.button} status='primary'
-            onPress={() => sesionOut()}
-            >
-            close session
-          </Button>
-
           <Text style={styles.text}>Olvidaste tu Contraseña ?</Text>
         </Layout>
       </Layout>
