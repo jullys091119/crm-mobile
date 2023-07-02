@@ -3,8 +3,11 @@ import { StyleSheet, View, Image, TouchableWithoutFeedback } from 'react-native'
 import { Layout, Input, Button, Icon, Text } from '@ui-kitten/components';
 import { Context } from '../appcontext/AppContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-export default function Login({navigation}) {
+import { useNavigation } from '@react-navigation/native';
 
+
+export default function Login() {
+  const navigation = useNavigation();
   const {login, valueEmail, valuePassword, logout} = useContext(Context)
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [email, setEmail] = useState("")
@@ -13,13 +16,20 @@ export default function Login({navigation}) {
   const loginBtn = async () => {
    let status = await login()
     if (status == 200) {
-      navigation.push("Dashboard")
+      navigation.navigate("Dashboard")
     }
   }
 
-  const logoutBtn = () => {
-    logout()
+   
+  const sesionOut =async () => {
+ 
+    let status = await logout()
+    if (status == 200) {
+      alert("logout")
+      navigation.navigate("Login")
+    }
   }
+
 
   const AlertIcon = (props) => (
     <Icon {...props} name='alert-circle-outline'/>
@@ -82,12 +92,13 @@ export default function Login({navigation}) {
             >
             Enviar
           </Button>
-          <Button 
+          {/* <Button 
             style={styles.button} status='primary'
-            onPress={() => logoutBtn()}
+            onPress={() => sesionOut()}
             >
-            Desloguea
-          </Button>
+            close session
+          </Button> */}
+
           <Text style={styles.text}>Olvidaste tu Contraseña ?</Text>
         </Layout>
       </Layout>

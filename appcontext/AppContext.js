@@ -6,8 +6,8 @@ export const Context = createContext(null);
 
 export const ContextProvider = ({ children }) => {
 
-  const [valueEmail, setValueEmail] = useState('saravic');
-  const [valuePassword, setValuePassword] = useState('root');
+  const [valueEmail, setValueEmail] = useState('julian');
+  const [valuePassword, setValuePassword] = useState('julian');
   const [token, setToken] = useState("")
   const [sid, setSid] = useState("")
   const [uid, setUid] = useState("")
@@ -15,16 +15,6 @@ export const ContextProvider = ({ children }) => {
   const [currentToken, setCurrentToken] = useState("")
   const [status, setStatus] =  useState("")
 
-
-  const getCurrentToken = async () => {
-    axios.post("http://50.116.19.48:8888/api/user/token", {
-      headers: {
-        'Content-Type': 'application/json',
-        "X-CSRF-Token": token,
-      }
-    }).then(res=>setCurrentToken(res.data.token)).catch((error)=>console.log(error))
-  }
-   
 
   const  getCredentials = async () => {
     try {
@@ -36,12 +26,11 @@ export const ContextProvider = ({ children }) => {
       setUid(uid_user)
       let ck = await AsyncStorage.getItem('@cookie');
       setCookie(ck)
-      console.log("Se guardaron las credenciales exitosamente")
+      console.log("Se obtuvieron las credenciales exitosamente")
     } catch(e) {
       console.log("No se pudo guardar la credencial en la store")
     }
   }
-
 
   const removeCredentials = async () => {
     await AsyncStorage.removeItem('@token');
@@ -95,9 +84,8 @@ export const ContextProvider = ({ children }) => {
     });
   }
   
-
   const logout = () => {
-    axios.post(API_URL + 'custom/logout',{
+    return axios.post(API_URL + 'custom/logout',{
       "uid": parseInt(uid),
       "sid": sid,
     },
@@ -110,6 +98,7 @@ export const ContextProvider = ({ children }) => {
     }).then(response=> {
       console.log(response, "respuestas <<<<")
       removeCredentials()
+      return response.status
     }).catch(error=>{
       if (error.response) {
         console.log(error.response.data);
@@ -123,19 +112,21 @@ export const ContextProvider = ({ children }) => {
       console.log(error.config);
     })
   }
-
+  
   useEffect(()=>{
     getCredentials()
-    //getCurrentToken()
   },[])
+
 
   return (
     <Context.Provider
     value={{
       login,
       logout,
+      getCredentials,
       valuePassword,
       valueEmail,
+      token,
     }}>
     {children}
     </Context.Provider>
