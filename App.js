@@ -9,23 +9,53 @@ import { NavigationContainer } from '@react-navigation/native';
 
 //componentes
 import Login from './components/Login';
-import { Dashboard } from './components/Dashboard';
-
-
+import Dashboard  from './components/Dashboard';
+import Home from './components/Home';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {  
+  const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState("")
+
+  const getToken = async () => {
+    const tk =  await AsyncStorage.getItem("@token");
+    setToken(tk)
+  }
+ 
+  useEffect(()=>{
+    getToken()
+  })
+
+  if (isLoading) {
+  // We haven't finished checking for the token yet
+  }
+  console.log(token, "token app")
   return (
     <>
       <ContextProvider>
         <IconRegistry icons={EvaIconsPack} />
         <ApplicationProvider {...eva} theme={eva.light}>
           <NavigationContainer>
+
             <Stack.Navigator>
-              <Stack.Screen 
-               name="Login"
-               component={Login}
+              <Stack.Screen
+                name="Home"
+                component={Home}
+                  options={{
+                    headerShown: false,
+                    title: "",
+                    headerStyle: {
+                      backgroundColor: "white",
+                    },
+                  }}
+              />
+             
+              <Stack.Screen
+                name="Login"
+                component={Login}
                 options={{
                   headerShown: false,
                   title: "",
@@ -34,7 +64,8 @@ export default function App() {
                   },
                 }}
               />
-              <Stack.Screen 
+            
+              <Stack.Screen
                 name="Dashboard"
                 component={Dashboard}
                 options={{
@@ -43,7 +74,7 @@ export default function App() {
                   headerStyle: {
                     backgroundColor: "white",
                   },
-              }}
+                }}
               />
             </Stack.Navigator>
           </NavigationContainer>
