@@ -3,7 +3,7 @@ import { ApplicationProvider, IconRegistry, Layout, Text, Button } from '@ui-kit
 import { StyleSheet, View, StylesSheet, ScrollView } from 'react-native'
 import { Context } from '../appcontext/AppContext';
 import TopNavigationMobile from './TopNavigationMobile';
-
+import DataTableVentas from './DataTableVentas';
 
 const  Dashboard = ({navigation}) => {
  const {logout} = useContext(Context)
@@ -17,12 +17,15 @@ const  Dashboard = ({navigation}) => {
 
   return (
     <>
-      <TopNavigationMobile />
+      <TopNavigationMobile />      
       <Layout style={styles.container}>
         <ScrollView>
           <Layout style={styles.contain}>
             <Layout style={{ display: "flex", alignSelf: "center" }}>
               <Text style={{ fontSize: 20, fontWeight: "700" }}>Ventas</Text>
+            </Layout>
+            <Layout>
+              <DataTableVentas/>
             </Layout>
           </Layout>
         </ScrollView>
