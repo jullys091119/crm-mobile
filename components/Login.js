@@ -19,18 +19,14 @@ export default function Login() {
       navigation.navigate("Dashboard")
     }
   }
-
-   
+  
   const sesionOut =async () => {
- 
     let status = await logout()
     if (status == 200) {
       alert("logout")
       navigation.navigate("Login")
     }
   }
-
-
   const AlertIcon = (props) => (
     <Icon {...props} name='alert-circle-outline'/>
   );

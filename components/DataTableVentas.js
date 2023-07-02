@@ -22,8 +22,7 @@ const DataTableVentas = () => {
       withCredentials: true
     
       }).then(async(response) => {
-        // console.log(response.data)
-        alert("getting ventas")
+        // console.log(response.data
       }).catch(error => {
       })
     }
