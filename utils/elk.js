@@ -41,7 +41,6 @@ export  const createQueryByEmpAndType = (emp_id, type, start, end) => {
         }
       }
     }
-    console.log(data.query.bool.must_not)
     return data
   }
 

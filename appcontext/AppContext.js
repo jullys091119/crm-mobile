@@ -26,7 +26,6 @@ export const ContextProvider = ({ children }) => {
       setUid(uid_user)
       let ck = await AsyncStorage.getItem('@cookie');
       setCookie(ck)
-      console.log("Se obtuvieron las credenciales exitosamente")
     } catch(e) {
       console.log("No se pudo guardar la credencial en la store")
     }
@@ -46,7 +45,6 @@ export const ContextProvider = ({ children }) => {
       await AsyncStorage.setItem('@sid', data.sessid);
       await AsyncStorage.setItem('@uid',  data.user.uid);
       await AsyncStorage.setItem('@cookie', data.session_name + '=' + data.sessid)
-      console.log("Se guardaron las credenciales exitosamente")
     } catch(e) {
       console.log("No se pudo guardar la credencial en la store")
     }
@@ -84,37 +82,28 @@ export const ContextProvider = ({ children }) => {
     });
   }
   
-  const logout = () => {
+  const logout = async () => {
+    let tk = await AsyncStorage.getItem('@token');
+    let sid_user = await AsyncStorage.getItem('@sid');
+    let uid_user = await AsyncStorage.getItem('@uid');
     return axios.post(API_URL + 'custom/logout',{
-      "uid": parseInt(uid),
-      "sid": sid,
+      "uid": parseInt(uid_user),
+      "sid": sid_user,
     },
     {
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token":  token
+        "X-CSRF-Token":  tk
       },
       withCredentials: true
     }).then(response=> {
-      console.log(response, "respuestas <<<<")
       removeCredentials()
       return response.status
     }).catch(error=>{
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
     })
   }
   
   useEffect(()=>{
-    getCredentials()
   },[])
 
 

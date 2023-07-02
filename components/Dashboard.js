@@ -6,15 +6,6 @@ import TopNavigationMobile from './TopNavigationMobile';
 import DataTableVentas from './DataTableVentas';
 
 const  Dashboard = ({navigation}) => {
- const {logout} = useContext(Context)
-  
-  const sesionOut = async () => {
-    let status = await logout()
-    if (status == 200) {
-      navigation.push("Login")
-    }
-  }
-
   return (
     <>
       <TopNavigationMobile />      
