@@ -30,7 +30,7 @@ const DataTableVentas = () => {
     }
 
   useEffect(()=> {
-      getQuerySales()
+    getQuerySales()
   }, [])
 
   return (
@@ -46,9 +46,9 @@ const DataTableVentas = () => {
           imagen.map((data) => (
             <DataTable.Row style={styles.row} key={data.id}>
               <DataTable.Cell> <Avatar size="tiny" source={{ uri: data.img }} /></DataTable.Cell>
-              <DataTable.Cell numeric style={styles.cell}>{data.menudeo}</DataTable.Cell>
-              <DataTable.Cell numeric style={styles.cell}>{data.flotilla}</DataTable.Cell>
-              <DataTable.Cell numeric style={styles.cell}>{data.total}</DataTable.Cell>
+              <DataTable.Cell numeric style={styles.cell}><Text style={styles.value}>{data.menudeo}</Text></DataTable.Cell>
+              <DataTable.Cell numeric style={styles.cell}><Text style={styles.value}>{data.flotilla}</Text></DataTable.Cell>
+              <DataTable.Cell numeric style={styles.cell}><Text style={styles.value}>{data.total}</Text></DataTable.Cell>
             </DataTable.Row>
           ))
          }
@@ -67,14 +67,17 @@ const styles = StyleSheet.create({
   cell: {
     display: "flex",
     justifyContent: "center",
-    marginTop: 10
+    marginTop: 10,
   },
   title: {
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   avatar: {
     marginTop: 20
+  },
+  value: { 
+    color: "#808080"
   }
 });
 

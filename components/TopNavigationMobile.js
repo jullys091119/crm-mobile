@@ -93,11 +93,12 @@ const TopNavigationMobile = (): React.ReactElement => {
 
 const styles = StyleSheet.create({
   icon: {
-    width: 32,
-    height: 32,
+    width: 22,
+    height: 22,
+    marginTop: 20
   },
   container: {
-    marginTop: 20,
+    marginTop: 0,
     backgroundColor: "white"
   }
 });
