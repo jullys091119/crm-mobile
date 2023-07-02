@@ -92,12 +92,12 @@ export default function Login() {
             >
             Enviar
           </Button>
-          {/* <Button 
+          <Button 
             style={styles.button} status='primary'
             onPress={() => sesionOut()}
             >
             close session
-          </Button> */}
+          </Button>
 
           <Text style={styles.text}>Olvidaste tu Contraseña ?</Text>
         </Layout>

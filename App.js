@@ -28,11 +28,7 @@ export default function App() {
   useEffect(()=>{
     getToken()
   })
-
-  if (isLoading) {
-  // We haven't finished checking for the token yet
-  }
-  console.log(token, "token app")
+  
   return (
     <>
       <ContextProvider>
