@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { DataTable } from 'react-native-paper';
 import { createQueryByEmpAndType } from "../utils/elk";
+import  imagen from '../utils/data'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image,Text, Avatar } from '@ui-kitten/components';
 import axios from 'axios'
 import { API_URL, VENTAS_INDEX } from "@env";
 
 const DataTableVentas = () => {
-  
   const getQuerySales = async() => {
     const tk = await AsyncStorage.getItem('@token');
     axios.post(API_URL + 'elk/broker', {
@@ -22,7 +23,8 @@ const DataTableVentas = () => {
       withCredentials: true
     
       }).then(async(response) => {
-        // console.log(response.data
+        response_data = JSON.parse(response.data)
+        console.log(response_data)
       }).catch(error => {
       })
     }
@@ -40,13 +42,16 @@ const DataTableVentas = () => {
           <DataTable.Title style={styles.title}>FLotilla</DataTable.Title>
           <DataTable.Title style={styles.title}>Total</DataTable.Title>
         </DataTable.Header>
-
-        <DataTable.Row style={styles.row}>
-          <DataTable.Cell>John</DataTable.Cell>
-          <DataTable.Cell numeric style={styles.cell}>0</DataTable.Cell>
-          <DataTable.Cell numeric style={styles.cell}>0</DataTable.Cell>
-          <DataTable.Cell numeric style={styles.cell}>0</DataTable.Cell>
-        </DataTable.Row>
+         {
+          imagen.map((data) => (
+            <DataTable.Row style={styles.row} key={data.id}>
+              <DataTable.Cell> <Avatar size="tiny" source={{ uri: data.img }} /></DataTable.Cell>
+              <DataTable.Cell numeric style={styles.cell}>{data.menudeo}</DataTable.Cell>
+              <DataTable.Cell numeric style={styles.cell}>{data.flotilla}</DataTable.Cell>
+              <DataTable.Cell numeric style={styles.cell}>{data.total}</DataTable.Cell>
+            </DataTable.Row>
+          ))
+         }
       </DataTable>
       
     </View>
@@ -55,17 +60,21 @@ const DataTableVentas = () => {
 
 const styles = StyleSheet.create({
   container: {
-   width: 330,
+   width: 370,
    display: 'flex',
    justifyContent: "center"
   },
   cell: {
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    marginTop: 10
   },
   title: {
     display: "flex",
     justifyContent: "center"
+  },
+  avatar: {
+    marginTop: 20
   }
 });
 
