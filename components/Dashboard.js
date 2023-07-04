@@ -1,19 +1,30 @@
-import React, { useContext } from 'react'
-import { ApplicationProvider, IconRegistry, Layout, Text, Button } from '@ui-kitten/components';
+import React, { useContext, useRef } from 'react'
+import { Layout, Text, Button } from '@ui-kitten/components';
 import { StyleSheet, View, StylesSheet, ScrollView } from 'react-native'
-import { Context } from '../appcontext/AppContext';
 import TopNavigationMobile from './TopNavigationMobile';
 import DataTableVentas from './DataTableVentas';
-import { Avatar } from 'react-native-paper';
+import { Avatar,  IconButton, MD3Colors } from 'react-native-paper';
+import ActionSheet from "react-native-actions-sheet";
 
 const  Dashboard = ({navigation}) => {
+  const actionSheetRef = useRef()
+
+  //actionSheetRef.current?.hide();
+  const ActionSheetModal = () => {  
+    actionSheetRef.current?.show();
+  }
+
   return (
     <>
       <TopNavigationMobile />
       <ScrollView>
         <Layout style={styles.containerGreeting}>
-          <Text style={styles.gretting}>!Hola!{" "}Julian</Text> 
-          <Avatar.Image size={40} source={require('../assets/unnamed.jpg')} /> 
+          <IconButton
+            icon="filter"
+            iconColor={MD3Colors.error50}
+            size={20}
+            onPress={() => ActionSheetModal()}
+          />
         </Layout>    
         <Layout style={styles.container}>  
           <Layout style={styles.contain}>
@@ -25,6 +36,9 @@ const  Dashboard = ({navigation}) => {
             </Layout>
           </Layout>
         </Layout>
+        <ActionSheet ref={actionSheetRef}>
+          <Text>Hi, I am here.</Text>
+        </ActionSheet>
       </ScrollView>
     </>
   )
@@ -51,7 +65,7 @@ const styles = StyleSheet.create({
   containerGreeting: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     paddingRight: 20,
     paddingVertical: 20,
   },

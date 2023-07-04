@@ -9,12 +9,13 @@ import axios from 'axios'
 import { API_URL, VENTAS_INDEX } from "@env";
 
 const DataTableVentas = () => {
-  const getQuerySales = async() => {
+
+  const getQuerySales = async(emp) => {
     const tk = await AsyncStorage.getItem('@token');
     axios.post(API_URL + 'elk/broker', {
       'type': '_count',
       'index': VENTAS_INDEX,
-      'query': await createQueryByEmpAndType(145, 'Menudeo', '2020/01/20', '2021/12/31'),
+      'query':  createQueryByEmpAndType(emp, 'Menudeo', '2020/01/20', '2021/12/31'),
     }, {
       headers: {
         'Content-Type': 'application/json',
@@ -23,14 +24,13 @@ const DataTableVentas = () => {
       withCredentials: true
     
       }).then(async(response) => {
-        response_data = JSON.parse(response.data)
-        console.log(response_data)
+        console.log(response.data)
       }).catch(error => {
       })
     }
 
   useEffect(()=> {
-    getQuerySales()
+    getQuerySales(145)
   }, [])
 
   return (
@@ -60,7 +60,7 @@ const DataTableVentas = () => {
 
 const styles = StyleSheet.create({
   container: {
-   width: 370,
+   width: 340,
    display: 'flex',
    justifyContent: "center"
   },
