@@ -11,20 +11,19 @@ export default ActionSheetDashboard = () => {
   const [dateFinal, setDateFinal] = useState("");
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
-  const {setInicial, setFinal} = useContext(Context);
+  const {setInicial, setFinal, getQuerySales} = useContext(Context);
   
+     
   const dateIncialSales = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
-    setDateInicial(currentDate);
-    setInicial(dateInicial);
+    setInicial(currentDate);
   };
 
   const dateFinalSales = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
-    setDateFinal(currentDate);
-    setFinal(dateFinal);
+    setFinal(currentDate);
   };
   
   return (
@@ -52,6 +51,7 @@ export default ActionSheetDashboard = () => {
         is24Hour={true}
         onChange={dateFinalSales}
       />
+      <Button onPress={() => getQuerySales(145)}>Guardar</Button>
     </SafeAreaView>
   )
 }

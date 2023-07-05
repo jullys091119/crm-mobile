@@ -6,37 +6,13 @@ import  imagen from '../utils/data'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image,Text, Avatar } from '@ui-kitten/components';
 import { API_URL, VENTAS_INDEX } from "@env";
-import {Context} from "../appcontext/AppContext";
-import axios from 'axios'
-import moment from 'moment';
+import {Context} from "../appcontext/AppContext"
 
-const DataTableVentas = () => {
-  const { dateInicial, dateFinal } = useContext(Context);
-  const getQuerySales = async(emp) => {
-    let inicial = moment(dateInicial).format('YYYY/MM/DD');
-    let final = moment(dateFinal).format('YYYY/MM/DD');
-    console.log(inicial, ">>>>")
-    console.log(final, ">>>>")
-    const tk = await AsyncStorage.getItem('@token');
-    axios.post(API_URL + 'elk/broker', {
-      'type': '_count',
-      'index': VENTAS_INDEX,
-      'query':  createQueryByEmpAndType(emp, 'Menudeo', inicial, final),
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': tk
-      },
-      withCredentials: true
-    
-      }).then(async(response) => {
-        console.log(response.data)
-      }).catch(error => {
-      })
-    }
+const DataTableVentas =  () => {
+  const { getQuerySales } = useContext(Context);
+
 
   useEffect(()=> {
-    getQuerySales(145)
   }, [])
 
   return (
