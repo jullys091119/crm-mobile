@@ -1,12 +1,13 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Layout, Text, Button } from '@ui-kitten/components';
 import { StyleSheet, View, StylesSheet, ScrollView } from 'react-native'
 import TopNavigationMobile from './TopNavigationMobile';
 import DataTableVentas from './DataTableVentas';
 import { Avatar,  IconButton, MD3Colors } from 'react-native-paper';
 import ActionSheet from "react-native-actions-sheet";
+import ActionSheetDashboard from './ActionSheetDashboard';
 
-const  Dashboard = ({navigation}) => {
+export default Dashboard = ({navigation}) => {
   const actionSheetRef = useRef()
 
   //actionSheetRef.current?.hide();
@@ -21,7 +22,7 @@ const  Dashboard = ({navigation}) => {
         <Layout style={styles.containerGreeting}>
           <IconButton
             icon="filter"
-            iconColor={MD3Colors.error50}
+            iconColor={MD3Colors.secondary80}
             size={20}
             onPress={() => ActionSheetModal()}
           />
@@ -37,7 +38,7 @@ const  Dashboard = ({navigation}) => {
           </Layout>
         </Layout>
         <ActionSheet ref={actionSheetRef}>
-          <Text>Hi, I am here.</Text>
+          <ActionSheetDashboard/>
         </ActionSheet>
       </ScrollView>
     </>
@@ -71,5 +72,3 @@ const styles = StyleSheet.create({
   },
 
 })
-
-export default Dashboard
