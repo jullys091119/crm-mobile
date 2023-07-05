@@ -14,7 +14,9 @@ export const ContextProvider = ({ children }) => {
   const [cookie, setCookie] = useState("")
   const [currentToken, setCurrentToken] = useState("")
   const [status, setStatus] =  useState("")
-
+  const [dateInicial, setInicial] = useState("");  
+  const [dateFinal, setFinal] = useState("");
+  
 
   const  getCredentials = async () => {
     try {
@@ -39,7 +41,7 @@ export const ContextProvider = ({ children }) => {
   }
 
 
-  setCredentials = async (data, status) => {
+   const setCredentials = async (data, status) => {
     try {
       await AsyncStorage.setItem('@token',data.token);
       await AsyncStorage.setItem('@sid', data.sessid);
@@ -92,7 +94,7 @@ export const ContextProvider = ({ children }) => {
     }).catch(error=>{
     })
   }
-  
+
   useEffect(()=>{
   },[])
 
@@ -103,9 +105,13 @@ export const ContextProvider = ({ children }) => {
       login,
       logout,
       getCredentials,
+      setInicial,
+      setFinal,
       valuePassword,
       valueEmail,
       token,
+      dateInicial,
+      dateFinal,
     }}>
     {children}
     </Context.Provider>

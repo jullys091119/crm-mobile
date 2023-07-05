@@ -1,58 +1,67 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import { SafeAreaView, Text, StyleSheet } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button } from '@ui-kitten/components';
+import { Button, Layout } from '@ui-kitten/components';
+import { Divider } from 'react-native-paper';
+import { Context } from '../appcontext/AppContext';
 
 export default ActionSheetDashboard = () => {
-
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [dateInicial, setDateInicial] = useState("");
+  const [dateFinal, setDateFinal] = useState("");
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const {setInicial, setFinal} = useContext(Context);
   
-  //taking date
-  const onChange = (event, selectedDate) => {
+  const dateIncialSales = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
-    setDate(currentDate);
-    console.log(currentDate)
+    setDateInicial(currentDate);
+    setInicial(dateInicial);
   };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
+  const dateFinalSales = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDateFinal(currentDate);
+    setFinal(dateFinal);
   };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
+  
   return (
     <SafeAreaView>
-      <Button style={styles.button} onPress={showDatepicker}>Desde</Button>
-      <Button style={styles.button} onPress={showDatepicker}>Hasta</Button>
-      <Text>selected: {date.toLocaleString()}</Text>
-      {show && (
-        <DateTimePicker
-          style={styles.datepick}
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          onChange={onChange}
-        />
-    )}
+      <Layout>
+        <Text style={styles.limite}>Desde</Text>
+      </Layout>
+      <DateTimePicker
+        style={{height: 40, backgroundColor: "#F5F5F5"}}
+        testID="dateTimePicker"
+        value={currentDate}
+        mode={mode}
+        is24Hour={true}
+        onChange={dateIncialSales}
+      />
+      <Layout><Divider/></Layout>
+      <Layout>
+        <Text style={styles.limite}>Hasta</Text>
+      </Layout>
+      <DateTimePicker
+        style={{height: 40, backgroundColor: "#F5F5F5"}}
+        testID="dateTimePicker"
+        value={currentDate}
+        mode={mode}
+        is24Hour={true}
+        onChange={dateFinalSales}
+      />
     </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({
-  button: {
-   marginVertical: 1,
-   marginHorizontal: 3,
-   backgroundColor: "#B3B3B3",
-   borderColor: "transparent",
-   marginVertical: 1
-  },
-  datepick: {
-    paddingVertical: 40
+  limite : {
+    fontSize: 20,
+    fontWeight: "700",
+    color:"#808080",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: "#F5F5F5"
   }
 })

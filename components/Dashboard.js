@@ -7,9 +7,8 @@ import { Avatar,  IconButton, MD3Colors } from 'react-native-paper';
 import ActionSheet from "react-native-actions-sheet";
 import ActionSheetDashboard from './ActionSheetDashboard';
 
-export default Dashboard = ({navigation}) => {
+export default Dashboard = () => {
   const actionSheetRef = useRef()
-
   //actionSheetRef.current?.hide();
   const ActionSheetModal = () => {  
     actionSheetRef.current?.show();
