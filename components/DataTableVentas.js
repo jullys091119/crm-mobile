@@ -1,21 +1,27 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { DataTable } from 'react-native-paper';
 import { createQueryByEmpAndType } from "../utils/elk";
 import  imagen from '../utils/data'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image,Text, Avatar } from '@ui-kitten/components';
-import axios from 'axios'
 import { API_URL, VENTAS_INDEX } from "@env";
+import {Context} from "../appcontext/AppContext";
+import axios from 'axios'
+import moment from 'moment';
 
 const DataTableVentas = () => {
-
+  const { dateInicial, dateFinal } = useContext(Context);
   const getQuerySales = async(emp) => {
+    let inicial = moment(dateInicial).format('YYYY/MM/DD');
+    let final = moment(dateFinal).format('YYYY/MM/DD');
+    console.log(inicial, ">>>>")
+    console.log(final, ">>>>")
     const tk = await AsyncStorage.getItem('@token');
     axios.post(API_URL + 'elk/broker', {
       'type': '_count',
       'index': VENTAS_INDEX,
-      'query':  createQueryByEmpAndType(emp, 'Menudeo', '2020/01/20', '2021/12/31'),
+      'query':  createQueryByEmpAndType(emp, 'Menudeo', inicial, final),
     }, {
       headers: {
         'Content-Type': 'application/json',
