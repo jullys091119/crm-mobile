@@ -1,8 +1,11 @@
 import React, { createContext, useEffect, useState } from 'react';
-import {API_URL} from "@env"
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const Context = createContext(null);
+import { API_URL, VENTAS_INDEX } from "@env";
+import { createQueryByEmpAndType } from "../utils/elk";
+import moment from 'moment';
+
 
 export const ContextProvider = ({ children }) => {
 
@@ -11,12 +14,11 @@ export const ContextProvider = ({ children }) => {
   const [token, setToken] = useState("")
   const [sid, setSid] = useState("")
   const [uid, setUid] = useState("")
-  const [cookie, setCookie] = useState("")
-  const [currentToken, setCurrentToken] = useState("")
-  const [status, setStatus] =  useState("")
   const [dateInicial, setInicial] = useState("");  
   const [dateFinal, setFinal] = useState("");
-  
+   
+  // console.log(dateInicial, "inicial CONTEXTC")
+  // console.log(dateFinal, "final CONTEXT")
 
   const  getCredentials = async () => {
     try {
@@ -95,25 +97,49 @@ export const ContextProvider = ({ children }) => {
     })
   }
 
-  useEffect(()=>{
-  },[])
+  //get query sales
+  const getQuerySales = async (emp) => {
+    let inicial = moment(dateInicial).format('YYYY/MM/DD');
+    let final = moment(dateFinal).format('YYYY/MM/DD');
+    console.log(inicial, "inicial")
+    console.log(final, "final")
+    const tk = await AsyncStorage.getItem('@token');
+    axios.post(API_URL + 'elk/broker', {
+      'type': '_count',
+      'index': VENTAS_INDEX,
+      'query': createQueryByEmpAndType(emp, 'Menudeo', inicial, final),
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': tk
+      },
+      withCredentials: true
+    
+      }).then(async(response) => {
+        console.log(response.data)
+      }).catch(error => {
+      })
+    }
 
+    useEffect(()=>{
+    },[])
 
   return (
     <Context.Provider
-    value={{
-      login,
-      logout,
-      getCredentials,
-      setInicial,
-      setFinal,
-      valuePassword,
-      valueEmail,
-      token,
-      dateInicial,
-      dateFinal,
-    }}>
-    {children}
+      value={{
+        login,
+        logout,
+        getCredentials,
+        setInicial,
+        setFinal,
+        getQuerySales,
+        valuePassword,
+        valueEmail,
+        token,
+        dateInicial,
+        dateFinal,
+      }}>
+      {children}
     </Context.Provider>
   );
 };
