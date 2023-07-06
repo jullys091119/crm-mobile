@@ -7,8 +7,6 @@ import { Context } from '../appcontext/AppContext';
 
 export default ActionSheetDashboard = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [dateInicial, setDateInicial] = useState("");
-  const [dateFinal, setDateFinal] = useState("");
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const {setInicial, setFinal, getQuerySales} = useContext(Context);

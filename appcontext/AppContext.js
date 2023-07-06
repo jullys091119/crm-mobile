@@ -16,9 +16,9 @@ export const ContextProvider = ({ children }) => {
   const [uid, setUid] = useState("")
   const [dateInicial, setInicial] = useState("");  
   const [dateFinal, setFinal] = useState("");
+  const [companies, setCompanies] = useState([])
+  const [sales, setSales] = useState(0)
    
-  // console.log(dateInicial, "inicial CONTEXTC")
-  // console.log(dateFinal, "final CONTEXT")
 
   const  getCredentials = async () => {
     try {
@@ -48,7 +48,9 @@ export const ContextProvider = ({ children }) => {
       await AsyncStorage.setItem('@token',data.token);
       await AsyncStorage.setItem('@sid', data.sessid);
       await AsyncStorage.setItem('@uid',  data.user.uid);
+      await AsyncStorage.setItem('@emp_id', data.user.field_empresa_account.und[0].target_id);
       await AsyncStorage.setItem('@cookie', data.session_name + '=' + data.sessid)
+      
     } catch(e) {
       console.log("No se pudo guardar la credencial en la store")
     }
@@ -67,7 +69,6 @@ export const ContextProvider = ({ children }) => {
       withCredentials: true
     })
     .then((res) => {
-      console.log(res.data)
       setCredentials(res.data)
       return res.status
     })
@@ -99,6 +100,7 @@ export const ContextProvider = ({ children }) => {
 
   //get query sales
   const getQuerySales = async (emp) => {
+    console.log(emp, "emp")
     let inicial = moment(dateInicial).format('YYYY/MM/DD');
     let final = moment(dateFinal).format('YYYY/MM/DD');
     console.log(inicial, "inicial")
@@ -116,12 +118,39 @@ export const ContextProvider = ({ children }) => {
       withCredentials: true
     
       }).then(async(response) => {
-        console.log(response.data)
+        console.log(response.data.count)
+        setSales(response.data.count)
       }).catch(error => {
       })
     }
+    
+    const getCompany = async () => {
+      const tk = await AsyncStorage.getItem('@token');
+      axios.get(API_URL + 'empresas', {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': tk
+        },
+
+      }).then(async(response) => {
+        setCompanies(response.data)
+      }).catch(error => {})
+    }
+
+
+    const chargingSalesAllCompanies = async () => { 
+       let aux = ""
+       for(let i=0; i<companies.length; i++){
+         aux = aux + companies[i].Nid
+      }
+
+      getQuerySales(aux)
+    }
 
     useEffect(()=>{
+      getCompany(), 
+      console.log(companies, "companies")
+      chargingSalesAllCompanies()
     },[])
 
   return (
@@ -138,6 +167,8 @@ export const ContextProvider = ({ children }) => {
         token,
         dateInicial,
         dateFinal,
+        companies,
+        sales,
       }}>
       {children}
     </Context.Provider>
