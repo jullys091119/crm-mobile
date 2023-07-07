@@ -99,17 +99,15 @@ export const ContextProvider = ({ children }) => {
   }
 
   //get query sales
-  const getQuerySales = async (emp) => {
-    console.log(emp, "emp")
+  const getQuerySales = async () => {
     let inicial = moment(dateInicial).format('YYYY/MM/DD');
     let final = moment(dateFinal).format('YYYY/MM/DD');
-    console.log(inicial, "inicial")
-    console.log(final, "final")
     const tk = await AsyncStorage.getItem('@token');
+    const emp_id = await AsyncStorage.getItem('@emp_id');
     axios.post(API_URL + 'elk/broker', {
       'type': '_count',
       'index': VENTAS_INDEX,
-      'query': createQueryByEmpAndType(emp, 'Menudeo', inicial, final),
+      'query': createQueryByEmpAndType(emp_id, 'Menudeo', inicial, final),
     }, {
       headers: {
         'Content-Type': 'application/json',
@@ -121,11 +119,13 @@ export const ContextProvider = ({ children }) => {
         console.log(response.data.count)
         setSales(response.data.count)
       }).catch(error => {
+        console.log(error, "error getquerysales")
       })
     }
     
     const getCompany = async () => {
       const tk = await AsyncStorage.getItem('@token');
+      console.log(tk, "tk")
       axios.get(API_URL + 'empresas', {
         headers: {
           'Content-Type': 'application/json',
@@ -133,24 +133,15 @@ export const ContextProvider = ({ children }) => {
         },
 
       }).then(async(response) => {
+        console.log(response.data, "getting companies")
         setCompanies(response.data)
-      }).catch(error => {})
-    }
-
-
-    const chargingSalesAllCompanies = async () => { 
-       let aux = ""
-       for(let i=0; i<companies.length; i++){
-         aux = aux + companies[i].Nid
-      }
-
-      getQuerySales(aux)
+      }).catch(error => {
+        console.log(error)
+      })
     }
 
     useEffect(()=>{
-      getCompany(), 
-      console.log(companies, "companies")
-      chargingSalesAllCompanies()
+      getCompany()
     },[])
 
   return (
