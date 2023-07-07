@@ -49,7 +49,7 @@ export default ActionSheetDashboard = () => {
         is24Hour={true}
         onChange={dateFinalSales}
       />
-      <Button onPress={() => getQuerySales(145)}>Guardar</Button>
+      <Button onPress={() => getQuerySales()}>Guardar</Button>
     </SafeAreaView>
   )
 }

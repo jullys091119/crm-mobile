@@ -6,7 +6,6 @@ import DataTableVentas from './DataTableVentas';
 import { Avatar,  IconButton, MD3Colors } from 'react-native-paper';
 import ActionSheet from "react-native-actions-sheet";
 import ActionSheetDashboard from './ActionSheetDashboard';
-
 export default Dashboard = () => {
   const actionSheetRef = useRef()
   const ActionSheetModal = () => {  
@@ -46,7 +45,6 @@ export default Dashboard = () => {
 const styles = StyleSheet.create({
   container: {
    flex: 1,
-  
   },
 
   contain: {
