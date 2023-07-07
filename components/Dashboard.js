@@ -9,7 +9,6 @@ import ActionSheetDashboard from './ActionSheetDashboard';
 
 export default Dashboard = () => {
   const actionSheetRef = useRef()
-  //actionSheetRef.current?.hide();
   const ActionSheetModal = () => {  
     actionSheetRef.current?.show();
   }
@@ -29,7 +28,7 @@ export default Dashboard = () => {
         <Layout style={styles.container}>  
           <Layout style={styles.contain}>
             <Layout style={{ display: "flex", alignSelf: "center" }}>
-              <Text style={{ fontSize: 20, fontWeight: "700", color:"#808080" }}>Ventas</Text>
+              <Text style={{ fontSize: 20, fontWeight: "700", color:"#808080", marginBottom: 30}}>Ventas</Text>
             </Layout>
             <Layout>
               <DataTableVentas/>
@@ -46,13 +45,13 @@ export default Dashboard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex:  1,
-    justifyContent: "flex-start",
-    alignItems:"center",
+   flex: 1,
+  
   },
 
   contain: {
-    marginTop: 10
+    marginTop: 10,
+    height: 550
   },
 
   gretting: {
