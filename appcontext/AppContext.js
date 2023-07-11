@@ -17,7 +17,7 @@ export const ContextProvider = ({ children }) => {
   const [dateInicial, setInicial] = useState("");  
   const [dateFinal, setFinal] = useState("");
   const [companies, setCompanies] = useState([])
-  const [sales, setSales] = useState(0)
+  const [sales, setSales] = useState([])
    
 
   const  getCredentials = async () => {
@@ -99,8 +99,9 @@ export const ContextProvider = ({ children }) => {
   }
 
   //get query sales
+  let salesByemp = []
   const getQuerySales = async (emp) => {
-    console.log(emp, "emp")
+    // console.log(emp, "objeto completo")
     let inicial = moment(dateInicial).format('YYYY/MM/DD');
     let final = moment(dateFinal).format('YYYY/MM/DD');
     const tk = await AsyncStorage.getItem('@token');
@@ -108,7 +109,7 @@ export const ContextProvider = ({ children }) => {
     axios.post(API_URL + 'elk/broker', {
       'type': '_count',
       'index': VENTAS_INDEX,
-      'query': createQueryByEmpAndType(emp, 'Menudeo', inicial, final),
+      'query': createQueryByEmpAndType(emp.nid, 'Menudeo', '2022/09/01', '2023/05/05'),
     }, {
       headers: {
         'Content-Type': 'application/json',
@@ -116,9 +117,19 @@ export const ContextProvider = ({ children }) => {
       },
       withCredentials: true
     
-      }).then(async(response) => {
-        console.log(response.data.count)
-        setSales(response.data.count)
+      }).then((response) => {
+         salesByemp.push(response.data.count)
+         setSales(salesByemp)
+        // const data = {
+        //   nid: emp.nid,
+        //   name: emp.nombre,
+        //   img: emp.logo,
+        //   heigth: emp.heigth,
+        //   width: emp.width,
+        //   count: response.data.count
+        // }
+        // let newArray = [...sales, data];
+        // setSales(newArray);
       }).catch(error => {
         console.log(error, "error getquerysales")
       })
@@ -133,8 +144,9 @@ export const ContextProvider = ({ children }) => {
         },
 
       }).then(async(response) => {
-        console.log(response.data), ">>>><"
-        setCompanies(response.data)
+        for (const idCompanies of response.data) {
+          getQuerySales(idCompanies)
+        }
       }).catch(error => {
         console.log(error)
       })
@@ -143,6 +155,7 @@ export const ContextProvider = ({ children }) => {
     
     useEffect(()=>{
       getCompany()
+  
     },[])
 
   return (
