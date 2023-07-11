@@ -7,6 +7,7 @@ import { ContextProvider, Context } from './appcontext/AppContext';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
+
 //componentes
 import Login from './components/Login';
 import Dashboard  from './components/Dashboard';
