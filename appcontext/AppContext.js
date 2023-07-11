@@ -8,17 +8,17 @@ import moment from 'moment';
 
 
 export const ContextProvider = ({ children }) => {
-
+  
   const [valueEmail, setValueEmail] = useState('julian');
   const [valuePassword, setValuePassword] = useState('julian');
   const [token, setToken] = useState("")
   const [sid, setSid] = useState("")
   const [uid, setUid] = useState("")
-  const [dateInicial, setInicial] = useState("");  
-  const [dateFinal, setFinal] = useState("");
   const [companies, setCompanies] = useState([])
   const [sales, setSales] = useState([])
-   
+  const [date, setDate] = useState ({}) 
+  
+  console.log(date, "fechas")
 
   const  getCredentials = async () => {
     try {
@@ -97,19 +97,17 @@ export const ContextProvider = ({ children }) => {
     }).catch(error=>{
     })
   }
-
   //get query sales
   let salesByemp = []
   const getQuerySales = async (emp) => {
-    // console.log(emp, "objeto completo")
-    let inicial = moment(dateInicial).format('YYYY/MM/DD');
-    let final = moment(dateFinal).format('YYYY/MM/DD');
+    let inicial = moment(date.startDate).format('YYYY/MM/DD');
+    let final = moment(date.endDate).format('YYYY/MM/DD');
     const tk = await AsyncStorage.getItem('@token');
-    // const emp_id = await AsyncStorage.getItem('@emp_id');
-    axios.post(API_URL + 'elk/broker', {
+
+    return axios.post(API_URL + 'elk/broker', {
       'type': '_count',
       'index': VENTAS_INDEX,
-      'query': createQueryByEmpAndType(emp.nid, 'Menudeo', '2022/09/01', '2023/05/05'),
+      'query': createQueryByEmpAndType(emp.nid, 'Menudeo', inicial, final),
     }, {
       headers: {
         'Content-Type': 'application/json',
@@ -118,8 +116,11 @@ export const ContextProvider = ({ children }) => {
       withCredentials: true
     
       }).then((response) => {
-         salesByemp.push(response.data.count)
-         setSales(salesByemp)
+        // console.log(inicial, final, "ya pasando la cuncion")
+        console.log(inicial, final)
+        salesByemp.push(response.data.count)
+        setSales(salesByemp)
+        
         // const data = {
         //   nid: emp.nid,
         //   name: emp.nombre,
@@ -135,7 +136,8 @@ export const ContextProvider = ({ children }) => {
       })
     }
     
-    const getCompany = async () => {
+    const getCompany = async (date) => {
+      console.log(date, "companie")
       const tk = await AsyncStorage.getItem('@token');
       axios.get(API_URL + 'empresas', {
         headers: {
@@ -143,19 +145,19 @@ export const ContextProvider = ({ children }) => {
           'X-CSRF-Token': tk
         },
 
-      }).then(async(response) => {
+      }).then((response) => {
         for (const idCompanies of response.data) {
-          getQuerySales(idCompanies)
+         getQuerySales(idCompanies)
+        
         }
       }).catch(error => {
-        console.log(error)
+        console.log(error, "getCOmpany")
       })
     }
   
     
     useEffect(()=>{
       getCompany()
-  
     },[])
 
   return (
@@ -164,14 +166,11 @@ export const ContextProvider = ({ children }) => {
         login,
         logout,
         getCredentials,
-        setInicial,
-        setFinal,
-        getQuerySales,
+        getCompany,
+        setDate,
         valuePassword,
         valueEmail,
         token,
-        dateInicial,
-        dateFinal,
         companies,
         sales,
       }}>

@@ -1,65 +1,55 @@
-import React, {useContext, useState} from 'react'
-import { SafeAreaView, Text, StyleSheet } from 'react-native'
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Layout } from '@ui-kitten/components';
-import { Divider } from 'react-native-paper';
+import React, {useContext, useEffect, useState} from 'react'
+import { SafeAreaView, Text, StyleSheet, View, Button } from 'react-native'
+import { Layout } from '@ui-kitten/components';
+import { DatePickerModal } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Context } from '../appcontext/AppContext';
+import { enGB, registerTranslation } from 'react-native-paper-dates'
+registerTranslation('en-GB', enGB)
 
 export default ActionSheetDashboard = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
-  const {setInicial, setFinal, getQuerySales} = useContext(Context);
+  const {getCompany, setDate} = useContext(Context);
+  const [range, setRange] = React.useState({ startDate: undefined, endDate: undefined });
+  const [open, setOpen] = React.useState(false);
   
-     
-  const dateIncialSales = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setInicial(currentDate);
-  };
 
-  const dateFinalSales = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setFinal(currentDate);
-  };
-  
+  const onDismiss = React.useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirm = React.useCallback(
+    ({ startDate, endDate })  => {
+      setOpen(false)
+      setRange({ startDate, endDate });
+      getCompany()
+      setDate({startDate,endDate})
+    },
+    [setOpen, setRange]
+  );
+  useEffect(()=> {
+     
+    
+  },[])
   return (
-    <SafeAreaView>
-      <Layout>
-        <Text style={styles.limite}>Desde</Text>
-      </Layout>
-      <DateTimePicker
-        style={{height: 40, backgroundColor: "#F5F5F5"}}
-        testID="dateTimePicker"
-        value={currentDate}
-        mode={mode}
-        is24Hour={true}
-        onChange={dateIncialSales}
+    <Layout style={{height: 59}}>
+      <Button title='Selecciona fecha' onPress={() => setOpen(true)} uppercase={false} mode="outlined"/>
+      <DatePickerModal
+        locale="en-GB"
+        mode="range"
+        visible={open}
+        onDismiss={onDismiss}
+        startDate={range.startDate}
+        endDate={range.endDate}
+        onConfirm={onConfirm}
       />
-      <Layout><Divider/></Layout>
-      <Layout>
-        <Text style={styles.limite}>Hasta</Text>
-      </Layout>
-      <DateTimePicker
-        style={{height: 40, backgroundColor: "#F5F5F5"}}
-        testID="dateTimePicker"
-        value={currentDate}
-        mode={mode}
-        is24Hour={true}
-        onChange={dateFinalSales}
-      />
-      <Button onPress={() => getQuerySales()}>Guardar</Button>
-    </SafeAreaView>
+    </Layout>
   )
 }
 const styles = StyleSheet.create({
-  limite : {
-    fontSize: 20,
-    fontWeight: "700",
-    color:"#808080",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: "#F5F5F5"
+  button: {
+   
   }
 })
