@@ -16,27 +16,29 @@ export default Dashboard = () => {
     <>
       <TopNavigationMobile />
       <ScrollView>
-        <Layout style={styles.containerGreeting}>
-          <IconButton
-            icon="filter"
-            iconColor={MD3Colors.secondary80}
-            size={20}
-            onPress={() => ActionSheetModal()}
-          />
-        </Layout>    
-        <Layout style={styles.container}>  
-          <Layout style={styles.contain}>
-            <Layout style={{ display: "flex", alignSelf: "center" }}>
-              <Text style={{ fontSize: 20, fontWeight: "700", color:"#808080", marginBottom: 30}}>Ventas</Text>
+        <Layout style={{flex: 1, backgroundColor: "#F7F9FC"}}>
+          <View style={styles.containerGreeting}>
+            <IconButton
+              icon="filter"
+              iconColor={MD3Colors.secondary80}
+              size={20}
+              onPress={() => ActionSheetModal()}
+            />
+          </View>    
+          <View style={styles.container}>  
+            <Layout style={styles.contain}>
+              <Layout style={{ display: "flex", alignSelf: "center" }}>
+                <Text style={{ fontSize: 20, fontWeight: "700", color:"#808080",backgroundColor: "#F7F9FC"}}>Ventas</Text>
+              </Layout>
+              <Layout>
+                <DataTableVentas/>
+              </Layout>
             </Layout>
-            <Layout>
-              <DataTableVentas/>
-            </Layout>
-          </Layout>
+          </View>
+          <ActionSheet ref={actionSheetRef}>
+            <ActionSheetDashboard/>
+          </ActionSheet>
         </Layout>
-        <ActionSheet ref={actionSheetRef}>
-          <ActionSheetDashboard/>
-        </ActionSheet>
       </ScrollView>
     </>
   )
@@ -45,26 +47,25 @@ export default Dashboard = () => {
 const styles = StyleSheet.create({
   container: {
    flex: 1,
+   backgroundColor: "#F7F9FC"
   },
 
   contain: {
-    marginTop: 10,
-    height: 550
+    backgroundColor: "#F7F9FC",
   },
-
   gretting: {
    fontSize: 20,
    fontWeight: "800",
    paddingLeft: 30, 
-   color: "#808080"
+   color: "#808080",
   },
 
   containerGreeting: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-end",
-    paddingRight: 20,
-    paddingVertical: 20,
+    backgroundColor: "#F7F9FC"
+    
   },
 
 })
