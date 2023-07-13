@@ -1,6 +1,6 @@
 
 import React, {useContext, useState} from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { Context } from '../appcontext/AppContext';
 import { useNavigation } from '@react-navigation/native';
 
@@ -64,6 +64,12 @@ const TopNavigationMobile = (): React.ReactElement => {
       onPress={toggleMenu}
     />
   );
+  
+  const RenderLogo = () => {
+    return (
+      <Image style={{height: 50, width: 92, marginTop: 20}} source={require('../assets/logo_crm.png')}  />
+    )
+  }
 
   const renderOverflowMenuAction = (): React.ReactElement => (
     <OverflowMenu
@@ -87,6 +93,7 @@ const TopNavigationMobile = (): React.ReactElement => {
     <TopNavigation
       style={styles.container}
       accessoryRight={renderOverflowMenuAction}
+      accessoryLeft={RenderLogo}
     />
   );
 };
@@ -99,7 +106,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 0,
-    backgroundColor: "white"
+    backgroundColor: "#FCF3FF"
   }
 });
 
