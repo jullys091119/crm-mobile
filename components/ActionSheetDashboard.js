@@ -7,7 +7,7 @@ import { Context } from '../appcontext/AppContext';
 import { enGB, registerTranslation } from 'react-native-paper-dates'
 registerTranslation('en-GB', enGB)
 
-export default ActionSheetDashboard = () => {
+export default ActionSheetDashboard = (props) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -15,10 +15,14 @@ export default ActionSheetDashboard = () => {
   const [open, setOpen] = useState(false);
   
   const {getCompany, setDate, getQuerySales} = useContext(Context);
+   
+  const closeActionSheet = () => {
+    console.log("ejecutando close actionsheet")
+    props.CloseSheetModal()
+  }
 
   useEffect(()=> {
   })
-
    const onDismiss = React.useCallback(() => {
     setOpen(false);
   }, [setOpen]);
@@ -29,6 +33,7 @@ export default ActionSheetDashboard = () => {
       setRange({ startDate, endDate });
       setDate({"start": startDate, "end": endDate })
       getCompany()
+      closeActionSheet()
     },
     [setOpen, setRange]
   );
