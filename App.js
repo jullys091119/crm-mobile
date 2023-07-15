@@ -12,6 +12,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import Login from './components/Login';
 import Dashboard  from './components/Dashboard';
 import Home from './components/Home';
+import SalesByemp from './components/SalesByEmp';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 
@@ -65,6 +67,18 @@ export default function App() {
               <Stack.Screen
                 name="Dashboard"
                 component={Dashboard}
+                options={{
+                  headerShown: false,
+                  title: "",
+                  headerStyle: {
+                    backgroundColor: "white",
+                  },
+                }}
+              />
+
+              <Stack.Screen
+                name="SalesByEmp"
+                component={SalesByemp}
                 options={{
                   headerShown: false,
                   title: "",
