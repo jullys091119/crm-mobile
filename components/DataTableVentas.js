@@ -1,32 +1,30 @@
 import React, { useEffect, useContext,  useState } from 'react';
 import { View, StyleSheet, ScrollView, Image, FlatList } from 'react-native';
-import { Avatar, DataTable } from 'react-native-paper';
-import  imagen from '../utils/data'
+import  data from '../utils/data'
 import { API_URL, VENTAS_INDEX } from "@env";
-import { enGB, registerTranslation } from 'react-native-paper-dates'
+import { enGB, registerTranslation} from 'react-native-paper-dates'
 registerTranslation('en-GB', enGB)
 import {Context} from "../appcontext/AppContext"
+import { useNavigation } from '@react-navigation/native';
+
 import { 
   Text,
   Card,
-  Layout,
+  Layout
  }
 from '@ui-kitten/components';
+import SalesByemp from './SalesByEmp';
 
 
-const DataTableVentas =  () => {
 
-  const { sales, getQuerySales } = useContext(Context);
-   
-  const AvatarCompany = (props) => (
-    <Avatar.Text size={135} source={{uri:  props}}/>
-  );
- 
-  useEffect(()=> {
-    
-  },[])
+const DataTableVentas = () => {
+
+  const { sales, getQuerySales, totalSale, salesFlotilla } = useContext(Context);
+  const [visible, setVisible] = useState(false);
+  const navigation = useNavigation();
+
   return (
-    <>
+    <> 
       <ScrollView nestedScrollEnabled={true}> 
         <Layout style={{backgroundColor:"#F7F9FC"}}>
           <FlatList
@@ -35,33 +33,33 @@ const DataTableVentas =  () => {
             keyExtractor= {(item, index)=> index }
             renderItem={({item, index})=> {
           
-              return (
+            return (
                 <Layout style={{display: "flex",flexDirection: "row",  alignSelf: "center",  backgroundColor: "#FCF3FF"}}>
-                  <Card style={styles.card}>
+                  <Card style={styles.card} onPress={()=>{navigation.navigate("SalesByEmp")}}>
                     <Layout>
-                    {/*  */}
-                     
-                     <Image source={{uri: imagen[index].img}} style={{width: imagen[index].width, height: imagen[index].heigth}}/>
+                     <Image source={{uri: data[index].img}} style={{width: data[index].width, height: data[index].heigth, marginLeft: 6}}/>
+                     <Text style={styles.nombreEmp}>{data[index].nombre}</Text>
                     </Layout>
-                   
                     <Layout style={{display: "flex", flexDirection:"row",justifyContent:"space-between"}}>
                       <Layout style={styles.dataInformation}>
-                        <Text style={styles.title}>{item}</Text> 
-                        <Text>Menudeo</Text>
+                        <Text style={styles.results}>{item}</Text> 
+                        <Layout>
+                          <Text style={styles.title}>Menudeo</Text>
+                        </Layout>
                       </Layout>
                       <Layout style={styles.dataInformation}>
-                        <Text style={styles.title}>0</Text>
-                        <Text>Flotilla</Text>
+                        <Text style={styles.results}>{salesFlotilla[index]}</Text>
+                        <Layout>
+                         <Text style={ salesFlotilla[index]!==0?styles.title:styles.isCero}>Flotilla</Text>
+                        </Layout>
                       </Layout>
                       <Layout style={styles.dataInformation}>
-                        <Text style={styles.title}>0</Text>
-                        <Text>Total</Text>
+                        <Text style={styles.results}>{item+salesFlotilla[index]}</Text>
+                        <Layout>
+                         <Text style={styles.title}>Total</Text>
+                        </Layout>
                       </Layout>
-                      
-                            {/* <Layout style={styles.avatar}>
-                            <AvatarCompany style={styles.avatar}/>
-                          </Layout> */}
-                  </Layout>
+                    </Layout>
                   </Card>
                 </Layout>
               )
@@ -88,12 +86,38 @@ const styles = StyleSheet.create({
     height: 50
   }, 
   dataInformation: {
+    display: "flex",
     paddingVertical: 9,
     marginTop: 10
   },
-  title: {
+  results: {
     fontSize: 30,
-    marginLeft: 10
+    marginLeft: 10,
+    color: "#9E9E9E"
+  },
+  container: {
+    height: 500,
+  },
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  cardSalesByEmp: {
+    height: 680,
+    width: 330,
+  },
+  title: {
+    textAlign: "center",
+    marginLeft: 6,
+    color: "#9E9E9E"
+  },
+  isCero: {
+    marginLeft: -2,
+    color: "#9E9E9E"
+  },
+  nombreEmp: {
+    color: "#9E9E9E",
+    marginVertical: 10,
+    marginLeft: 9
   }
  
 });

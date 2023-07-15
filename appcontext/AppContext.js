@@ -3,9 +3,9 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const Context = createContext(null);
 import { API_URL, VENTAS_INDEX } from "@env";
-import { createQueryByEmpAndType } from "../utils/elk";
+import { createQueryByEmpAndType, createQueryTotalData } from "../utils/elk";
 import moment from 'moment';
-
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export const ContextProvider = ({ children }) => {
   
@@ -16,10 +16,11 @@ export const ContextProvider = ({ children }) => {
   const [uid, setUid] = useState("")
   const [companies, setCompanies] = useState([])
   const [sales, setSales] = useState([])
+  const [salesFlotilla, setSalesFlotilla] =  useState([])
   const [date, setDate] = useState ({}) 
-  
-  console.log(date, "fechas")
-
+  const [totalSale, setTotalSale] = useState([])
+  const [firstDayMonthLast, setFirstDayMonthLast] =  useState({})
+  console.log(date, "dates sacando context")
   const  getCredentials = async () => {
     try {
       let tk = await AsyncStorage.getItem('@token');
@@ -97,14 +98,44 @@ export const ContextProvider = ({ children }) => {
     }).catch(error=>{
     })
   }
-  //get query sales
-  let salesByemp = []
-  const getQuerySales = async (emp) => {
-    let inicial = moment(date.startDate).format('YYYY/MM/DD');
-    let final = moment(date.endDate).format('YYYY/MM/DD');
-    const tk = await AsyncStorage.getItem('@token');
 
-    return axios.post(API_URL + 'elk/broker', {
+  //Obteniendo ventas
+  let salesByemp = []
+  let flotilla = []
+  const getQuerySales = async (emp) => {                     
+    let inicial;
+    let final;
+    if(date.start === undefined && date.end=== undefined) {
+      inicial = moment().startOf('month').format('YYYY/MM/DD');
+      final   = moment().endOf('month').format('YYYY/MM/DD');
+    } else {
+      inicial = moment(date.start).format('YYYY/MM/DD')
+      final = moment(date.end).format('YYYY/MM/DD') 
+      console.log("renderizando otros dias")
+    }
+    const tk = await AsyncStorage.getItem('@token');
+    
+
+    await axios.post(API_URL + 'elk/broker', {
+      'type': '_count',
+      'index': VENTAS_INDEX,
+      'query': createQueryByEmpAndType(emp.nid, 'Flotilla', inicial, final),
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': tk
+      },
+      withCredentials: true
+    
+      }).then((response) => {
+        flotilla.push(response.data.count)
+        setSalesFlotilla(flotilla)
+
+      }).catch(error => {
+        console.log(error, "error en flotilla")
+      })
+
+    await axios.post(API_URL + 'elk/broker', {
       'type': '_count',
       'index': VENTAS_INDEX,
       'query': createQueryByEmpAndType(emp.nid, 'Menudeo', inicial, final),
@@ -116,48 +147,60 @@ export const ContextProvider = ({ children }) => {
       withCredentials: true
     
       }).then((response) => {
-        // console.log(inicial, final, "ya pasando la cuncion")
-        console.log(inicial, final)
-        salesByemp.push(response.data.count)
-        setSales(salesByemp)
-        
-        // const data = {
-        //   nid: emp.nid,
-        //   name: emp.nombre,
-        //   img: emp.logo,
-        //   heigth: emp.heigth,
-        //   width: emp.width,
-        //   count: response.data.count
-        // }
-        // let newArray = [...sales, data];
-        // setSales(newArray);
+       salesByemp.push(response.data.count)
+       setSales(salesByemp)
       }).catch(error => {
         console.log(error, "error getquerysales")
       })
+
     }
     
+    //Obteniendo el id de las empresas
     const getCompany = async (date) => {
-      console.log(date, "companie")
       const tk = await AsyncStorage.getItem('@token');
       axios.get(API_URL + 'empresas', {
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': tk
         },
-
       }).then((response) => {
         for (const idCompanies of response.data) {
-         getQuerySales(idCompanies)
+        getQuerySales(idCompanies)
+        getTotalSalesByEmp(idCompanies)
         
         }
       }).catch(error => {
         console.log(error, "getCOmpany")
       })
     }
-  
+
+    //Ventas totales por empresa
+    let totalSales = []
+    getTotalSalesByEmp = async (emp) => {
+      const tk = await AsyncStorage.getItem('@token');
+      let inicial = moment(date.start).format('YYYY/MM/DD');
+      let final = moment(date.end).format('YYYY/MM/DD');
+      return axios.post(API_URL + 'elk/broker', {
+        'type': '_count',
+        'index': VENTAS_INDEX,
+        'query': createQueryTotalData(emp.nid, inicial, final),
+      }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': tk
+      },
+      withCredentials: true
     
+      }).then((response) => {
+        totalSales.push(response.data.count);
+        setTotalSale(totalSales)
+      }).catch(error => {
+        console.log(error, "error al obtener las ventas totales")
+      })     
+    }
+  
     useEffect(()=>{
-      getCompany()
+      getCompany() 
     },[])
 
   return (
@@ -167,12 +210,15 @@ export const ContextProvider = ({ children }) => {
         logout,
         getCredentials,
         getCompany,
+        getQuerySales,
         setDate,
         valuePassword,
         valueEmail,
         token,
         companies,
         sales,
+        totalSale,
+        salesFlotilla
       }}>
       {children}
     </Context.Provider>

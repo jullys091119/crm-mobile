@@ -28,7 +28,7 @@ export default Dashboard = () => {
           <View style={styles.container}>  
             <Layout style={styles.contain}>
               <Layout style={{ display: "flex", alignSelf: "center" }}>
-                <Text style={{ fontSize: 20, fontWeight: "700", color:"#808080",backgroundColor: "#F7F9FC"}}>Ventas</Text>
+                <Text style={{ fontSize: 20, fontWeight: "700", color:"#9E9E9E",backgroundColor: "#F7F9FC", paddingVertical:10}}>Dashboard</Text>
               </Layout>
               <Layout>
                 <DataTableVentas/>
