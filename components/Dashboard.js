@@ -6,10 +6,18 @@ import DataTableVentas from './DataTableVentas';
 import { Avatar,  IconButton, MD3Colors } from 'react-native-paper';
 import ActionSheet from "react-native-actions-sheet";
 import ActionSheetDashboard from './ActionSheetDashboard';
+import { Context } from '../appcontext/AppContext';
+
+  
 export default Dashboard = () => {
   const actionSheetRef = useRef()
+  
   const ActionSheetModal = () => {  
     actionSheetRef.current?.show();
+  }
+
+  const CloseSheetModal = () => {  
+    actionSheetRef.current?.hide();
   }
 
   return (
@@ -36,7 +44,7 @@ export default Dashboard = () => {
             </Layout>
           </View>
           <ActionSheet ref={actionSheetRef}>
-            <ActionSheetDashboard/>
+            <ActionSheetDashboard CloseSheetModal={CloseSheetModal}/>
           </ActionSheet>
         </Layout>
       </ScrollView>

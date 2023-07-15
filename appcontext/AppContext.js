@@ -156,8 +156,8 @@ export const ContextProvider = ({ children }) => {
     }
     
     //Obteniendo el id de las empresas
-    const getCompany = async (date) => {
-      const tk = await AsyncStorage.getItem('@token');
+    const getCompany =  (date) => {
+      const tk = AsyncStorage.getItem('@token');
       axios.get(API_URL + 'empresas', {
         headers: {
           'Content-Type': 'application/json',
@@ -165,43 +165,16 @@ export const ContextProvider = ({ children }) => {
         },
       }).then((response) => {
         for (const idCompanies of response.data) {
-        getQuerySales(idCompanies)
-        getTotalSalesByEmp(idCompanies)
-        
+         getQuerySales(idCompanies)      
         }
       }).catch(error => {
         console.log(error, "getCOmpany")
       })
     }
 
-    //Ventas totales por empresa
-    let totalSales = []
-    getTotalSalesByEmp = async (emp) => {
-      const tk = await AsyncStorage.getItem('@token');
-      let inicial = moment(date.start).format('YYYY/MM/DD');
-      let final = moment(date.end).format('YYYY/MM/DD');
-      return axios.post(API_URL + 'elk/broker', {
-        'type': '_count',
-        'index': VENTAS_INDEX,
-        'query': createQueryTotalData(emp.nid, inicial, final),
-      }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': tk
-      },
-      withCredentials: true
-    
-      }).then((response) => {
-        totalSales.push(response.data.count);
-        setTotalSale(totalSales)
-      }).catch(error => {
-        console.log(error, "error al obtener las ventas totales")
-      })     
-    }
-  
-    useEffect(()=>{
-      getCompany() 
-    },[])
+  useEffect(()=>{
+    getCompany() 
+  },[])
 
   return (
     <Context.Provider
@@ -218,7 +191,7 @@ export const ContextProvider = ({ children }) => {
         companies,
         sales,
         totalSale,
-        salesFlotilla
+        salesFlotilla,
       }}>
       {children}
     </Context.Provider>

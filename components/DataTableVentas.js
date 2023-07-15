@@ -32,7 +32,6 @@ const DataTableVentas = () => {
             data={sales}
             keyExtractor= {(item, index)=> index }
             renderItem={({item, index})=> {
-          
             return (
                 <Layout style={{display: "flex",flexDirection: "row",  alignSelf: "center",  backgroundColor: "#FCF3FF"}}>
                   <Card style={styles.card} onPress={()=>{navigation.navigate("SalesByEmp")}}>
