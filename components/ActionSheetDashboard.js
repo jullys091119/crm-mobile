@@ -9,15 +9,12 @@ registerTranslation('en-GB', enGB)
 
 export default ActionSheetDashboard = (props) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
   const [range, setRange] = useState({ startDate: undefined, endDate: undefined });
   const [open, setOpen] = useState(false);
   
   const {getCompany, setDate, getQuerySales} = useContext(Context);
    
   const closeActionSheet = () => {
-    console.log("ejecutando close actionsheet")
     props.CloseSheetModal()
   }
 
