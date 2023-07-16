@@ -18,8 +18,7 @@ import SalesByemp from './SalesByEmp';
 
 
 const DataTableVentas = () => {
-
-  const { sales, getQuerySales, totalSale, salesFlotilla } = useContext(Context);
+  const { sales, salesFlotilla } = useContext(Context);
   const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
 
@@ -35,8 +34,8 @@ const DataTableVentas = () => {
             return (
                 <Layout style={{display: "flex",flexDirection: "row",  alignSelf: "center",  backgroundColor: "#FCF3FF"}}>
                   <Card style={styles.card} onPress={()=>{navigation.navigate("SalesByEmp")}}>
-                    <Layout>
-                     <Image source={{uri: data[index].img}} style={{width: data[index].width, height: data[index].heigth, marginLeft: 6}}/>
+                    <Layout style={{display: "flex" }}>
+                     <Image source={{uri: data[index].img}} style={{width: data[index].width, height: data[index].heigth, alignSelf: "center"}}/>
                      <Text style={styles.nombreEmp}>{data[index].nombre}</Text>
                     </Layout>
                     <Layout style={{display: "flex", flexDirection:"row",justifyContent:"space-between"}}>
@@ -116,7 +115,8 @@ const styles = StyleSheet.create({
   nombreEmp: {
     color: "#9E9E9E",
     marginVertical: 10,
-    marginLeft: 9
+    marginLeft: 0,
+    alignSelf: "center"
   }
  
 });

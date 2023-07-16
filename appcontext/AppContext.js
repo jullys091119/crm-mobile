@@ -5,7 +5,6 @@ export const Context = createContext(null);
 import { API_URL, VENTAS_INDEX } from "@env";
 import { createQueryByEmpAndType, createQueryTotalData } from "../utils/elk";
 import moment from 'moment';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export const ContextProvider = ({ children }) => {
   
@@ -19,8 +18,7 @@ export const ContextProvider = ({ children }) => {
   const [salesFlotilla, setSalesFlotilla] =  useState([])
   const [date, setDate] = useState ({}) 
   const [totalSale, setTotalSale] = useState([])
-  const [firstDayMonthLast, setFirstDayMonthLast] =  useState({})
-  console.log(date, "dates sacando context")
+
   const  getCredentials = async () => {
     try {
       let tk = await AsyncStorage.getItem('@token');
@@ -111,7 +109,6 @@ export const ContextProvider = ({ children }) => {
     } else {
       inicial = moment(date.start).format('YYYY/MM/DD')
       final = moment(date.end).format('YYYY/MM/DD') 
-      console.log("renderizando otros dias")
     }
     const tk = await AsyncStorage.getItem('@token');
     
@@ -148,6 +145,7 @@ export const ContextProvider = ({ children }) => {
     
       }).then((response) => {
        salesByemp.push(response.data.count)
+       console.log(response.data.count)
        setSales(salesByemp)
       }).catch(error => {
         console.log(error, "error getquerysales")
@@ -165,7 +163,9 @@ export const ContextProvider = ({ children }) => {
         },
       }).then((response) => {
         for (const idCompanies of response.data) {
-         getQuerySales(idCompanies)      
+
+         getQuerySales(idCompanies)   
+         //console.log(idCompanies.nombre)   
         }
       }).catch(error => {
         console.log(error, "getCOmpany")
@@ -173,6 +173,24 @@ export const ContextProvider = ({ children }) => {
     }
 
   useEffect(()=>{
+     //Obteniendo el id de las empresas
+     const getCompany =  (date) => {
+      console.log("1")
+      const tk = AsyncStorage.getItem('@token');
+      axios.get(API_URL + 'empresas', {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': tk
+        },
+      }).then((response) => {
+        for (const idCompanies of response.data) {
+         getQuerySales(idCompanies)   
+        }
+      }).catch(error => {
+        console.log(error, "getCOmpany")
+      })
+    }
+
     getCompany() 
   },[])
 
